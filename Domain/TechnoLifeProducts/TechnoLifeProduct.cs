@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.TechnoLifeProducts
 {
-    [Table("TechnoLifeProduct", Schema = "app")]
+    [Table("TechnoLifeProduct", Schema = "technolife")]
     public class TechnoLifeProduct
     {
         [Key]
@@ -15,6 +15,9 @@ namespace Domain.TechnoLifeProducts
 
         [Required, StringLength(1024)]
         public string Link { get; set; }
+
+        [Required]
+        public ProductType ProductType { get; set; }
 
         [StringLength(1024)]
         public string ImageLink { get; set; }
@@ -40,5 +43,11 @@ namespace Domain.TechnoLifeProducts
         public decimal? SellPrice { get; set; }
 
         public bool IsAvailable { get; set; }
+
+        public DateTime LastUpdate { get; set; }
+
+        public ICollection<TechnoLifeProductImage>? ProductImages { get; set; }
+
+        public TechnoLifeProductSpecification TechnoLifeProductSpecification { get; set; }
     }
 }

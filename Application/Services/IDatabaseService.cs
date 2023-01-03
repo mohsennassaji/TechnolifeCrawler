@@ -8,7 +8,7 @@ namespace Application.Services
     {
         //Technolife product
         DbSet<TechnoLifeProduct> TechnoLifeProducts { get; }
-        DbSet<TechnoLifeProductDetail> TechnoLifeProductDetails { get; }
+        DbSet<TechnoLifeProductSpecification> TechnoLifeProductDetails { get; }
 
         //General
         DbSet<GeneralSetting> GeneralSettings { get; }
