@@ -1,6 +1,7 @@
 ﻿using Application.Services;
 using Application.TechnoLifeCrawler.PageParser;
 using Application.TechnoLifeCrawler.ProductScraper;
+using Domain.TechnoLifeProducts;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
@@ -33,6 +34,7 @@ namespace Application.Crawler
         {
             try
             {
+                var tasks = new List<Task>();
                 var i = 1;
                 while (true)
                 {
@@ -44,26 +46,7 @@ namespace Application.Crawler
 
                     foreach (var product in products)
                     {
-                        var existedProduct = availableProducts.SingleOrDefault(p => p.Code == product.Code);
-                        if (existedProduct != default)
-                        {
-                            existedProduct.LastUpdate = DateTime.Now;
-                            existedProduct.IsAvailable = product.IsAvailable;
-                            existedProduct.NormalPrice = product.NormalPrice;
-                            existedProduct.SellPrice = product.SellPrice;
-                            existedProduct.DicsountPersentage = product.DicsountPersentage;
-
-                            _databaseService.Products.Update(existedProduct);
-                        }
-                        else
-                        {
-                            await _databaseService.Products.AddAsync(product);
-                        }
-
-                        await _databaseService.SaveChangesAsync(CancellationToken.None);
-
-                        await _technoLifeProductScraper.SaveProductImages(product);
-                        await _technoLifeProductScraper.SaveProductSpecification(product);
+                        tasks.Add(SaveProduct(product, availableProducts));
                     }
 
                     var maximumPageNumber = await _technoLifePageParser.GetMaximumActivePageNumber(webPage);
@@ -74,13 +57,38 @@ namespace Application.Crawler
 
                     i++;
                 }
+
+                await Task.WhenAll(tasks);
             }
             catch(Exception ex)
             {
                 _log.Log(ex, this.GetType().ToString(),  System.Reflection.MethodBase.GetCurrentMethod(), "Crawler");
                 throw;
             }
-            
+        }
+
+        private async Task SaveProduct(Product product, List<Product> availableProducts)
+        {
+            var existedProduct = availableProducts.SingleOrDefault(p => p.Code == product.Code);
+            if (existedProduct != default)
+            {
+                existedProduct.LastUpdate = DateTime.Now;
+                existedProduct.IsAvailable = product.IsAvailable;
+                existedProduct.NormalPrice = product.NormalPrice;
+                existedProduct.SellPrice = product.SellPrice;
+                existedProduct.DicsountPersentage = product.DicsountPersentage;
+
+                _databaseService.Products.Update(existedProduct);
+            }
+            else
+            {
+                await _databaseService.Products.AddAsync(product);
+            }
+
+            await _databaseService.SaveChangesAsync(CancellationToken.None);
+
+            await _technoLifeProductScraper.SaveProductImages(product);
+            await _technoLifeProductScraper.SaveProductSpecification(product);
         }
     }
 }
