@@ -4,6 +4,6 @@ namespace Application.TechnoLifeCrawler.PageParser
 {
     public interface ITechnoLifePageParser
     {
-        Task<List<TechnoLifeProduct>> Parse(string page);
+        Task<List<Product>> Parse(string page);
     }
 }

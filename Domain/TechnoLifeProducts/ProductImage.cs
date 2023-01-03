@@ -3,19 +3,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.TechnoLifeProducts
 {
-    [Table("TechnoLifeProductImage", Schema = "technolife")]
-    public class TechnoLifeProductImage
+    [Table("ProductImage", Schema = "app")]
+    public class ProductImage
     {
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("TechnoLifeProduct")]
+        [ForeignKey("Product")]
         public int ProductId { get; set; }
 
         [Required, StringLength(1024)]
         public string ImageLink { get; set; }
 
         [Required]
-        public TechnoLifeProduct Product { get; set; }
+        public Product Product { get; set; }
     }
 }

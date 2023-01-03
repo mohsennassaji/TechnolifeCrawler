@@ -4,6 +4,6 @@ namespace Application.TechnoLifeCrawler.ProductScraper
 {
     public interface ITechnoLifeProductScraper
     {
-        Task ExtractProductInformation(TechnoLifeProduct technoLifeProduct);
+        Task ExtractProductInformation(Product technoLifeProduct);
     }
 }

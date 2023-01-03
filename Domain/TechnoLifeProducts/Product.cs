@@ -4,11 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.TechnoLifeProducts
 {
-    [Table("TechnoLifeProduct", Schema = "technolife")]
-    public class TechnoLifeProduct
+    [Table("Product", Schema = "app")]
+    public class Product
     {
         [Key]
         public int Id { get; set; }
+
+        [Required, StringLength(20)]
+        public string Code { get; set; }
 
         [Required, StringLength(250)]
         public string Name { get; set; }
@@ -18,6 +21,9 @@ namespace Domain.TechnoLifeProducts
 
         [Required]
         public ProductType ProductType { get; set; }
+
+        [Required]
+        public ProductProvider ProductProvider { get; set; }
 
         [StringLength(1024)]
         public string ImageLink { get; set; }
@@ -46,8 +52,8 @@ namespace Domain.TechnoLifeProducts
 
         public DateTime LastUpdate { get; set; }
 
-        public ICollection<TechnoLifeProductImage>? ProductImages { get; set; }
+        public ICollection<ProductImage>? ProductImages { get; set; }
 
-        public TechnoLifeProductSpecification TechnoLifeProductSpecification { get; set; }
+        public ProductSpecification ProductSpecification { get; set; }
     }
 }

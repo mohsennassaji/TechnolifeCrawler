@@ -16,9 +16,9 @@ namespace Infrastructure.Persistance
 
         public DbSet<LogManagment> LogManagments => Set<LogManagment>();
 
-        public DbSet<TechnoLifeProduct> TechnoLifeProducts => Set<TechnoLifeProduct>();
+        public DbSet<Product> TechnoLifeProducts => Set<Product>();
 
-        public DbSet<TechnoLifeProductSpecification> TechnoLifeProductDetails => Set<TechnoLifeProductSpecification>();
+        public DbSet<ProductSpecification> TechnoLifeProductDetails => Set<ProductSpecification>();
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

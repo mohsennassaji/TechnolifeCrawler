@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.TechnoLifeProducts
 {
-    [Table("TechnoLifeProductSpecification", Schema = "technolife")]
-    public class TechnoLifeProductSpecification
+    [Table("ProductSpecification", Schema = "app")]
+    public class ProductSpecification
     {
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("TechnoLifeProduct")]
+        [ForeignKey("Product")]
         public int ProductId { get; set; }
 
         [StringLength(100)]
@@ -19,6 +19,6 @@ namespace Domain.TechnoLifeProducts
         public string? Weight { get; set; }
 
         [Required]
-        public TechnoLifeProduct Product { get; set; }
+        public Product Product { get; set; }
     }
 }

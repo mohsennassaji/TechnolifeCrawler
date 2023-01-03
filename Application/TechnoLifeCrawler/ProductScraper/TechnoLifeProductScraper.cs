@@ -14,7 +14,7 @@ namespace Application.TechnoLifeCrawler.ProductScraper
             _log = log;
         }
 
-        public async Task ExtractProductInformation(TechnoLifeProduct technoLifeProduct)
+        public async Task ExtractProductInformation(Product technoLifeProduct)
         {
             //get link of product
             //get information of link

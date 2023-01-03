@@ -14,7 +14,7 @@ namespace Application.TechnoLifeCrawler.PageParser
             _log = log;
         }
 
-        public async Task<List<TechnoLifeProduct>> Parse(string page)
+        public async Task<List<Product>> Parse(string page)
         {
             //parse file
             //get products
