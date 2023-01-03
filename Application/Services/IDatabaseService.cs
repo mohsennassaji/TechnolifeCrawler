@@ -7,8 +7,9 @@ namespace Application.Services
     public interface IDatabaseService
     {
         //Technolife product
-        DbSet<Product> TechnoLifeProducts { get; }
-        DbSet<ProductSpecification> TechnoLifeProductDetails { get; }
+        DbSet<Product> Products { get; }
+        DbSet<ProductSpecification> ProductSpecifications { get; }
+        DbSet<ProductImage> ProductImages { get; }
 
         //General
         DbSet<GeneralSetting> GeneralSettings { get; }
