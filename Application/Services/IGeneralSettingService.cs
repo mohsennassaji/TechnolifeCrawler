@@ -2,6 +2,6 @@
 {
     public interface IGeneralSettingService
     {
-        string GetCamundaServerUrl();
+        string GetTechnoLifeLaptopBaseUrl();
     }
 }
