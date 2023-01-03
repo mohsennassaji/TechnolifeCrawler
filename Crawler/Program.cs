@@ -1,12 +1,14 @@
-﻿using Infrastructure;
+﻿using Application;
+using Infrastructure;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Crawler
 {
     public class Program
     {
-        static async void Main(string[] args)
+        public async static Task Main()
         {
             var builder = new ConfigurationBuilder();
             BuildConfig(builder);
@@ -15,8 +17,11 @@ namespace Crawler
                 .ConfigureServices((context, services) =>
                 {
                     services.AddInfrastructure(context.Configuration);
+                    services.AddApplication();
                 }).Build();
 
+            var svc = ActivatorUtilities.CreateInstance<Application.Crawler.Crawler>(host.Services);
+            await svc.Crawl(string.Empty);
         }
 
         static void BuildConfig(IConfigurationBuilder builder)
