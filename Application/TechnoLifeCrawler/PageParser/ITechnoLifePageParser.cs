@@ -2,6 +2,6 @@
 {
     public interface ITechnoLifePageParser
     {
-        Task<string> Parse(string text);
+        Task<List<string>> Parse(string page);
     }
 }
