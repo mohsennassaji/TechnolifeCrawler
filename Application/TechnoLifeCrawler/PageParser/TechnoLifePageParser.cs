@@ -3,7 +3,7 @@ using Domain.TechnoLifeProducts;
 
 namespace Application.TechnoLifeCrawler.PageParser
 {
-    public class TechnoLifePageParser : ITechnoLifePageParser
+    public class TechnoLifePageParser : IProductListParser
     {
         private readonly IDatabaseService _databaseService;
         private readonly ILogManagmentService _log;
@@ -20,6 +20,11 @@ namespace Application.TechnoLifeCrawler.PageParser
             //get products
             //save products
             //get next links
+            throw new NotImplementedException();
+        }
+
+        public async Task<int> GetMaximumActivePageNumber(string page)
+        {
             throw new NotImplementedException();
         }
     }

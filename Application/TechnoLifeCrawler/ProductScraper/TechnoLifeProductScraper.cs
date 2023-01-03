@@ -3,7 +3,7 @@ using Domain.TechnoLifeProducts;
 
 namespace Application.TechnoLifeCrawler.ProductScraper
 {
-    public class TechnoLifeProductScraper : ITechnoLifeProductScraper
+    public class TechnoLifeProductScraper : IProductParser
     {
         private readonly IDatabaseService _databaseService;
         private readonly ILogManagmentService _log;
@@ -14,7 +14,16 @@ namespace Application.TechnoLifeCrawler.ProductScraper
             _log = log;
         }
 
-        public async Task ExtractProductInformation(Product technoLifeProduct)
+        public async Task SaveProductImages(Product technoLifeProduct)
+        {
+            //get link of product
+            //get information of link
+            //pars information
+            //save information
+            throw new NotImplementedException();
+        }
+
+        public async Task SaveProductSpecification(Product technoLifeProduct)
         {
             //get link of product
             //get information of link

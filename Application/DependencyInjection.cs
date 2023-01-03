@@ -10,8 +10,8 @@ namespace Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddTransient<ICrawler, Crawler.Crawler>();
-            services.AddTransient<ITechnoLifeProductScraper, TechnoLifeProductScraper>();
-            services.AddTransient<ITechnoLifePageParser, TechnoLifePageParser>();
+            services.AddTransient<IProductParser, TechnoLifeProductScraper>();
+            services.AddTransient<IProductListParser, TechnoLifePageParser>();
 
             return services;
         }
