@@ -1,7 +1,9 @@
-﻿namespace Application.TechnoLifeCrawler.ProductScraper
+﻿using Domain.TechnoLifeProducts;
+
+namespace Application.TechnoLifeCrawler.ProductScraper
 {
     public interface ITechnoLifeProductScraper
     {
-        Task<string> ExtractProductInformation(string url);
+        Task ExtractProductInformation(TechnoLifeProduct technoLifeProduct);
     }
 }

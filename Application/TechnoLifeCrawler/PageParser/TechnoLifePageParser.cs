@@ -1,4 +1,5 @@
 ﻿using Application.Services;
+using Domain.TechnoLifeProducts;
 
 namespace Application.TechnoLifeCrawler.PageParser
 {
@@ -13,7 +14,7 @@ namespace Application.TechnoLifeCrawler.PageParser
             _log = log;
         }
 
-        public Task<List<string>> Parse(string page)
+        public async Task<List<TechnoLifeProduct>> Parse(string page)
         {
             //parse file
             //get products

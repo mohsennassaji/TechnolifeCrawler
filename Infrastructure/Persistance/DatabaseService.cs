@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using Domain.SystemEntities;
+using Domain.TechnoLifeProducts;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -16,9 +17,13 @@ namespace Infrastructure.Persistance
             optionsBuilder.UseSqlServer(@"Server=.;Database=Crawler;Trusted_Connection=True;");
         }
 
-        public DbSet<GeneralSetting> GeneralSettings => throw new NotImplementedException();
+        public DbSet<GeneralSetting> GeneralSettings => Set<GeneralSetting>();
 
-        public DbSet<LogManagment> LogManagments => throw new NotImplementedException();
+        public DbSet<LogManagment> LogManagments => Set<LogManagment>();
+
+        public DbSet<TechnoLifeProduct> TechnoLifeProducts => Set<TechnoLifeProduct>();
+
+        public DbSet<TechnoLifeProductDetail> TechnoLifeProductDetails => Set<TechnoLifeProductDetail>();
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

@@ -1,7 +1,9 @@
-﻿namespace Application.TechnoLifeCrawler.PageParser
+﻿using Domain.TechnoLifeProducts;
+
+namespace Application.TechnoLifeCrawler.PageParser
 {
     public interface ITechnoLifePageParser
     {
-        Task<List<string>> Parse(string page);
+        Task<List<TechnoLifeProduct>> Parse(string page);
     }
 }

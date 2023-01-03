@@ -1,4 +1,5 @@
 ﻿using Application.Services;
+using Domain.TechnoLifeProducts;
 
 namespace Application.TechnoLifeCrawler.ProductScraper
 {
@@ -13,7 +14,7 @@ namespace Application.TechnoLifeCrawler.ProductScraper
             _log = log;
         }
 
-        public Task<string> ExtractProductInformation(string url)
+        public async Task ExtractProductInformation(TechnoLifeProduct technoLifeProduct)
         {
             //get link of product
             //get information of link
