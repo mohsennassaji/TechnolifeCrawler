@@ -12,11 +12,6 @@ namespace Infrastructure.Persistance
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"Server=.;Database=Crawler;Trusted_Connection=True;");
-        }
-
         public DbSet<GeneralSetting> GeneralSettings => Set<GeneralSetting>();
 
         public DbSet<LogManagment> LogManagments => Set<LogManagment>();
