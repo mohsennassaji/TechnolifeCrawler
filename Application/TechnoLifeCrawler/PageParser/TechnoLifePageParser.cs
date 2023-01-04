@@ -26,10 +26,22 @@ namespace Application.TechnoLifeCrawler.PageParser
 
             foreach (var node in nodes)
             {
+                var product = new Product();
                 var ram = GetRamStorage(node);
                 var cache = GetCacheStorage(node);
                 var monitor = GetMonitorSize(node);
                 var hdd = GetHddStorage(node);
+                var isAvailable = GetProductIsAvailable(node);
+                if(isAvailable)
+                {
+
+                }
+                var normalPrice = GetNormalPrice(node);
+                var offerPrice = GetOfferPrice(node);
+                var discount = GetDiscount(node);
+                var imageLink = GetImageLink(node);
+                var link = GetProductLink(node);
+
 
                 //products.Add(new Product()
                 //{
@@ -50,6 +62,24 @@ namespace Application.TechnoLifeCrawler.PageParser
             }
 
             return products;
+        }
+
+        private string GetProductLink(HtmlNode node)
+        {
+            return $"http://www.technolife.ir{node.ChildNodes[0].Attributes[1].DeEntitizeValue}";
+        }
+
+        private string GetImageLink(HtmlNode node)
+        {
+            var imageLink = string.Empty;
+            var imageLinkNode = node.ChildNodes.Descendants("img")
+                .ToList();
+            if (imageLinkNode.Count() > 0)
+            {
+                imageLink = imageLinkNode.First().Attributes[0].Value;
+            }
+
+            return imageLink;
         }
 
         private string GetCacheStorage(HtmlNode node)
@@ -104,17 +134,56 @@ namespace Application.TechnoLifeCrawler.PageParser
             return hddStorage;
         }
 
-        private string GetSellPrice(HtmlNode node)
+        private bool GetProductIsAvailable(HtmlNode node)
         {
-            var hddStorage = string.Empty;
-            var hddNode = node.ChildNodes[4].ChildNodes[0].ChildNodes.Descendants("span")
-                .Where(node => node.GetAttributeValue("class", "").Equals("icon-hard-disk-drive")).ToList();
+            var isAvailable = true;
+            var hddNode = node.ChildNodes.Descendants("div")
+                .Where(node => node.GetAttributeValue("class", "").Equals("ProductComp_unavailable_product___76Dc")).ToList();
             if (hddNode.Count() > 0)
             {
-                hddStorage = hddNode.First().ParentNode.ChildNodes[1].InnerText;
+                isAvailable = false;
             }
 
-            return hddStorage;
+            return isAvailable;
+        }
+
+        private string GetNormalPrice(HtmlNode node)
+        {
+            var normalPrice = string.Empty;
+            var normalPriceNode = node.ChildNodes.Descendants("div")
+                .Where(node => node.GetAttributeValue("class", "").Equals("ProductComp_normal_price__Upie4")).ToList();
+            if (normalPriceNode.Count() > 0)
+            {
+                normalPrice = normalPriceNode.First().ChildNodes[0].ChildNodes[0].InnerText;
+            }
+
+            return normalPrice;
+        }
+
+        private string GetOfferPrice(HtmlNode node)
+        {
+            var offerPrice = string.Empty;
+            var offerPriceNode = node.ChildNodes.Descendants("div")
+                .Where(node => node.GetAttributeValue("class", "").Equals("ProductComp_offer_price__HAQ6N")).ToList();
+            if (offerPriceNode.Count() > 0)
+            {
+                offerPrice = offerPriceNode.First().ChildNodes[0].ChildNodes[0].InnerText;
+            }
+
+            return offerPrice;
+        }
+
+        private string GetDiscount(HtmlNode node)
+        {
+            var discount = string.Empty;
+            var discountNode = node.ChildNodes.Descendants("div")
+                .Where(node => node.GetAttributeValue("class", "").Equals("ProductComp_product_off_box__OfLBa")).ToList();
+            if (discountNode.Count() > 0)
+            {
+                discount = discountNode.First().ChildNodes[0].ChildNodes[0].InnerText;
+            }
+
+            return discount;
         }
 
         public int GetMaximumActivePageNumber(string page)
