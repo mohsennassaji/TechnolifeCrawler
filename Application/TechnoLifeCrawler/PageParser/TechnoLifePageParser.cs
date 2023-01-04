@@ -13,7 +13,7 @@ namespace Application.TechnoLifeCrawler.PageParser
             _log = log;
         }
 
-        public List<Product> Parse(string page)
+        public List<Product> GetProducts(string page)
         {
             //parse file
             //get products
