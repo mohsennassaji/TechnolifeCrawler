@@ -30,17 +30,11 @@ namespace Domain.TechnoLifeProducts
 
         public float? MonitorSize { get; set; }
 
-        public int? ProcessorCache { get; set; }
+        public string? ProcessorCache { get; set; }
 
-        public Unit? ProcessorCacheStorageUnit { get; set; }
+        public string? Ram { get; set; }
 
-        public int? Ram { get; set; }
-
-        public Unit? RamStorageUnit { get; set; }
-
-        public int? Hdd { get; set; }
-
-        public Unit? HddStorageUnit { get; set; }
+        public string? Hdd { get; set; }
 
         public decimal? NormalPrice { get; set; }
 
