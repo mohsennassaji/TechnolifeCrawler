@@ -1,6 +1,7 @@
 ﻿using Application.Services;
 using Application.TechnoLifeCrawler.PageParser;
 using Application.TechnoLifeCrawler.ProductScraper;
+using Domain.Enums;
 using Domain.TechnoLifeProducts;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -34,28 +35,18 @@ namespace Application.Crawler
         {
             try
             {
+                var crawledProducts = await ExtractProducts(url);
+
+                var technoLifeLaptopProducts = await _databaseService.Products
+                    .Where(p => p.ProductProvider == ProductProvider.TechnoLife 
+                    && p.ProductType == ProductType.Laptop).ToListAsync();
+
+                RemoveNotExistedProducts(technoLifeLaptopProducts, crawledProducts);
+
                 var tasks = new List<Task>();
-                var i = 1;
-                while (true)
+                foreach (var product in crawledProducts)
                 {
-                    var webPage = await _httpClient.GetStringAsync($"{url}?page={i}");
-                    var products = await _technoLifePageParser.Parse(webPage);
-
-                    var productsCode = products.Select(p => p.Code).ToList();
-                    var availableProducts = await _databaseService.Products.Where(p => productsCode.Contains(p.Code)).ToListAsync();
-
-                    foreach (var product in products)
-                    {
-                        tasks.Add(SaveProduct(product, availableProducts));
-                    }
-
-                    var maximumPageNumber = await _technoLifePageParser.GetMaximumActivePageNumber(webPage);
-                    if (i >= maximumPageNumber)
-                    {
-                        break;
-                    }
-
-                    i++;
+                    tasks.Add(SaveProduct(product, technoLifeLaptopProducts));
                 }
 
                 await Task.WhenAll(tasks);
@@ -89,6 +80,35 @@ namespace Application.Crawler
 
             await _technoLifeProductScraper.SaveProductImages(product);
             await _technoLifeProductScraper.SaveProductSpecification(product);
+        }
+
+        private void RemoveNotExistedProducts(List<Product> technoLifeLaptopProducts, List<Product> crawledProducts)
+        {
+            var productsCode = crawledProducts.Select(p => p.Code).ToList();
+            var notExistedAnyMore = technoLifeLaptopProducts.Where(p => !productsCode.Contains(p.Code)).ToList();
+            _databaseService.Products.RemoveRange(notExistedAnyMore);
+        }
+
+        private async Task<List<Product>> ExtractProducts(string url)
+        {
+            var products = new List<Product>();
+
+            var i = 1;
+            while (true)
+            {
+                var webPage = await _httpClient.GetStringAsync($"{url}?page={i}");
+                products.AddRange(await _technoLifePageParser.Parse(webPage));
+
+                var maximumPageNumber = await _technoLifePageParser.GetMaximumActivePageNumber(webPage);
+                if (i >= maximumPageNumber)
+                {
+                    break;
+                }
+
+                i++;
+            }
+
+            return products;
         }
     }
 }

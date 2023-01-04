@@ -5,12 +5,10 @@ namespace Application.TechnoLifeCrawler.PageParser
 {
     public class TechnoLifePageParser : IProductListParser
     {
-        private readonly IDatabaseService _databaseService;
         private readonly ILogManagmentService _log;
 
-        public TechnoLifePageParser(IDatabaseService databaseService, ILogManagmentService log)
+        public TechnoLifePageParser(ILogManagmentService log)
         {
-            _databaseService = databaseService;
             _log = log;
         }
 
