@@ -27,21 +27,22 @@ namespace Application.TechnoLifeCrawler.PageParser
             foreach (var node in nodes)
             {
                 var product = new Product();
-                var ram = GetRamStorage(node);
-                var cache = GetCacheStorage(node);
-                var monitor = GetMonitorSize(node);
-                var hdd = GetHddStorage(node);
-                var isAvailable = GetProductIsAvailable(node);
-                if(isAvailable)
+                product.Ram = GetRamStorage(node);
+                product.ProcessorCache = GetCacheStorage(node);
+                product.MonitorSize = GetMonitorSize(node);
+                product.Hdd = GetHddStorage(node);
+                product.IsAvailable = GetProductIsAvailable(node);
+                if(product.IsAvailable)
                 {
-
+                    product.NormalPrice = GetNormalPrice(node);
+                    product.SellPrice = GetOfferPrice(node);
+                    product.DicsountPersentage = GetDiscount(node);
                 }
-                var normalPrice = GetNormalPrice(node);
-                var offerPrice = GetOfferPrice(node);
-                var discount = GetDiscount(node);
-                var imageLink = GetImageLink(node);
-                var link = GetProductLink(node);
-
+                
+                product.ImageLink = GetImageLink(node);
+                product.Link = GetProductLink(node);
+                product.Code = node.Id;
+                product.LastUpdate = DateTime.Now;
 
                 //products.Add(new Product()
                 //{
@@ -147,7 +148,7 @@ namespace Application.TechnoLifeCrawler.PageParser
             return isAvailable;
         }
 
-        private string GetNormalPrice(HtmlNode node)
+        private decimal GetNormalPrice(HtmlNode node)
         {
             var normalPrice = string.Empty;
             var normalPriceNode = node.ChildNodes.Descendants("div")
@@ -157,10 +158,10 @@ namespace Application.TechnoLifeCrawler.PageParser
                 normalPrice = normalPriceNode.First().ChildNodes[0].ChildNodes[0].InnerText;
             }
 
-            return normalPrice;
+            return decimal.Parse(RemoveNoneDigitChars(normalPrice));
         }
 
-        private string GetOfferPrice(HtmlNode node)
+        private decimal GetOfferPrice(HtmlNode node)
         {
             var offerPrice = string.Empty;
             var offerPriceNode = node.ChildNodes.Descendants("div")
@@ -170,10 +171,10 @@ namespace Application.TechnoLifeCrawler.PageParser
                 offerPrice = offerPriceNode.First().ChildNodes[0].ChildNodes[0].InnerText;
             }
 
-            return offerPrice;
+            return decimal.Parse(RemoveNoneDigitChars(offerPrice));
         }
 
-        private string GetDiscount(HtmlNode node)
+        private float GetDiscount(HtmlNode node)
         {
             var discount = string.Empty;
             var discountNode = node.ChildNodes.Descendants("div")
@@ -183,7 +184,12 @@ namespace Application.TechnoLifeCrawler.PageParser
                 discount = discountNode.First().ChildNodes[0].ChildNodes[0].InnerText;
             }
 
-            return discount;
+            return float.Parse(discount.Substring(0, discount.Length - 1));
+        }
+
+        private string RemoveNoneDigitChars(string input)
+        {
+            return string.Concat(input.Where(char.IsDigit));
         }
 
         public int GetMaximumActivePageNumber(string page)

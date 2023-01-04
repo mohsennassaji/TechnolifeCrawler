@@ -28,7 +28,7 @@ namespace Domain.TechnoLifeProducts
         [StringLength(1024)]
         public string ImageLink { get; set; }
 
-        public float? MonitorSize { get; set; }
+        public string? MonitorSize { get; set; }
 
         public string? ProcessorCache { get; set; }
 
