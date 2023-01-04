@@ -2,6 +2,6 @@
 {
     public interface ICrawler
     {
-        Task Crawl(string url);
+        Task Crawl(string url, CancellationToken cancellationToken);
     }
 }

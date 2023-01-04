@@ -31,11 +31,11 @@ namespace Application.Crawler
 
             _httpClient = new HttpClient(handler);
         }
-        public async Task Crawl(string url)
+        public async Task Crawl(string url, CancellationToken cancellationToken)
         {
             try
             {
-                var crawledProducts = await ExtractProducts(url);
+                var crawledProducts = await ExtractProducts(url, cancellationToken);
 
                 var technoLifeLaptopProducts = await _databaseService.Products
                     .Where(p => p.ProductProvider == ProductProvider.TechnoLife 
@@ -46,7 +46,7 @@ namespace Application.Crawler
                 var tasks = new List<Task>();
                 foreach (var product in crawledProducts)
                 {
-                    tasks.Add(SaveProduct(product, technoLifeLaptopProducts));
+                    tasks.Add(SaveProduct(product, technoLifeLaptopProducts, cancellationToken));
                 }
 
                 await Task.WhenAll(tasks);
@@ -58,7 +58,7 @@ namespace Application.Crawler
             }
         }
 
-        private async Task SaveProduct(Product product, List<Product> availableProducts)
+        private async Task SaveProduct(Product product, List<Product> availableProducts, CancellationToken cancellationToken)
         {
             var existedProduct = availableProducts.SingleOrDefault(p => p.Code == product.Code);
             if (existedProduct != default)
@@ -73,10 +73,10 @@ namespace Application.Crawler
             }
             else
             {
-                await _databaseService.Products.AddAsync(product);
+                await _databaseService.Products.AddAsync(product, cancellationToken);
             }
 
-            await _databaseService.SaveChangesAsync(CancellationToken.None);
+            await _databaseService.SaveChangesAsync(cancellationToken);
 
             await _technoLifeProductScraper.SaveProductImages(product);
             await _technoLifeProductScraper.SaveProductSpecification(product);
@@ -89,14 +89,14 @@ namespace Application.Crawler
             _databaseService.Products.RemoveRange(notExistedAnyMore);
         }
 
-        private async Task<List<Product>> ExtractProducts(string url)
+        private async Task<List<Product>> ExtractProducts(string url, CancellationToken cancellationToken)
         {
             var products = new List<Product>();
 
             var i = 1;
             while (true)
             {
-                var webPage = await _httpClient.GetStringAsync($"{url}?page={i}");
+                var webPage = await _httpClient.GetStringAsync($"{url}?page={i}", cancellationToken);
                 products.AddRange(await _technoLifePageParser.Parse(webPage));
 
                 var maximumPageNumber = await _technoLifePageParser.GetMaximumActivePageNumber(webPage);
