@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using Domain.TechnoLifeProducts;
+using HtmlAgilityPack;
 
 namespace Application.TechnoLifeCrawler.PageParser
 {
@@ -12,7 +13,7 @@ namespace Application.TechnoLifeCrawler.PageParser
             _log = log;
         }
 
-        public async Task<List<Product>> Parse(string page)
+        public List<Product> Parse(string page)
         {
             //parse file
             //get products
@@ -21,9 +22,16 @@ namespace Application.TechnoLifeCrawler.PageParser
             throw new NotImplementedException();
         }
 
-        public async Task<int> GetMaximumActivePageNumber(string page)
+        public int GetMaximumActivePageNumber(string page)
         {
-            throw new NotImplementedException();
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(page);
+
+            var nodes = htmlDocument.DocumentNode.Descendants("span")
+                .Where(node => node.GetAttributeValue("class", "")
+                .Equals("active-pagenavigation")).Select(n => n.InnerText).ToList();
+            
+            return int.Parse(nodes.Max()); 
         }
     }
 }
