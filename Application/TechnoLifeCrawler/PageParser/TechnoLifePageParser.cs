@@ -43,23 +43,10 @@ namespace Application.TechnoLifeCrawler.PageParser
                 product.Link = GetProductLink(node);
                 product.Code = node.Id;
                 product.LastUpdate = DateTime.Now;
+                product.ProductProvider = ProductProvider.TechnoLife;
+                product.ProductType = ProductType.Laptop;
 
-                //products.Add(new Product()
-                //{
-                //    Code = node.Id,
-                //    Name = node.ChildNodes[3].InnerText,
-                //    Link = $"http://www.technolife.ir{node.ChildNodes[0].Attributes[1].DeEntitizeValue}",
-                //    ImageLink = node.ChildNodes[0].ChildNodes[0].ChildNodes[0].Attributes[0].DeEntitizeValue,
-                //    LastUpdate = DateTime.Now,
-                //    ProductType = ProductType.Laptop,
-                //    ProductProvider = ProductProvider.TechnoLife,
-                //    MonitorSize = node.ChildNodes[4].ChildNodes[0].ChildNodes[0].InnerText,
-                //    ProcessorCache = node.ChildNodes[4].ChildNodes[0].ChildNodes[1].InnerText,
-                //    Ram = node.ChildNodes[4].ChildNodes[0].ChildNodes[2].InnerText,
-                //    Hdd = node.ChildNodes[4].ChildNodes[0].ChildNodes[3].InnerText,
-                //    NormalPrice = node.ChildNodes[5].ChildNodes[0].ChildNodes[0].InnerText,
-                //    SellPrice = node.ChildNodes[5].ChildNodes[1].ChildNodes[0].InnerText,
-                //});
+                products.Add(product);
             }
 
             return products;
@@ -83,9 +70,9 @@ namespace Application.TechnoLifeCrawler.PageParser
             return imageLink;
         }
 
-        private string GetCacheStorage(HtmlNode node)
+        private string? GetCacheStorage(HtmlNode node)
         {
-            var cacheStorage = string.Empty;
+            string? cacheStorage = null;
             var cacheNode = node.ChildNodes[4].ChildNodes[0].ChildNodes.Descendants("span")
                 .Where(node => node.GetAttributeValue("class", "").Equals("icon-processors")).ToList();
             if (cacheNode.Count() > 0)
@@ -96,9 +83,9 @@ namespace Application.TechnoLifeCrawler.PageParser
             return cacheStorage;
         }
 
-        private string GetMonitorSize(HtmlNode node)
+        private string? GetMonitorSize(HtmlNode node)
         {
-            var monitorSize = string.Empty;
+            string? monitorSize = null;
             var monitorNode = node.ChildNodes[4].ChildNodes[0].ChildNodes.Descendants("span")
                 .Where(node => node.GetAttributeValue("class", "").Equals("icon-monitor")).ToList();
             if (monitorNode.Count() > 0)
@@ -109,9 +96,9 @@ namespace Application.TechnoLifeCrawler.PageParser
             return monitorSize;
         }
 
-        private string GetRamStorage(HtmlNode node)
+        private string? GetRamStorage(HtmlNode node)
         {
-            var ramStorage = string.Empty;
+            string? ramStorage = null;
             var ramNode = node.ChildNodes[4].ChildNodes[0].ChildNodes.Descendants("span")
                 .Where(node => node.GetAttributeValue("class", "").Equals("icon-ram")).ToList();
             if (ramNode.Count() > 0)
@@ -122,9 +109,9 @@ namespace Application.TechnoLifeCrawler.PageParser
             return ramStorage;
         }
 
-        private string GetHddStorage(HtmlNode node)
+        private string? GetHddStorage(HtmlNode node)
         {
-            var hddStorage = string.Empty;
+            string? hddStorage = null;
             var hddNode = node.ChildNodes[4].ChildNodes[0].ChildNodes.Descendants("span")
                 .Where(node => node.GetAttributeValue("class", "").Equals("icon-hard-disk-drive")).ToList();
             if (hddNode.Count() > 0)
@@ -153,12 +140,19 @@ namespace Application.TechnoLifeCrawler.PageParser
             var normalPrice = string.Empty;
             var normalPriceNode = node.ChildNodes.Descendants("div")
                 .Where(node => node.GetAttributeValue("class", "").Equals("ProductComp_normal_price__Upie4")).ToList();
+
+            if(normalPriceNode.Count() == 0)
+            {
+                normalPriceNode = node.ChildNodes.Descendants("div")
+                    .Where(node => node.GetAttributeValue("class", "").Equals("ProductComp_main_price__XgWce")).ToList();
+            }
+
             if (normalPriceNode.Count() > 0)
             {
                 normalPrice = normalPriceNode.First().ChildNodes[0].ChildNodes[0].InnerText;
             }
 
-            return decimal.Parse(RemoveNoneDigitChars(normalPrice));
+            return string.IsNullOrEmpty(normalPrice) == true ? default : decimal.Parse(RemoveNoneDigitChars(normalPrice));
         }
 
         private decimal GetOfferPrice(HtmlNode node)
@@ -166,16 +160,18 @@ namespace Application.TechnoLifeCrawler.PageParser
             var offerPrice = string.Empty;
             var offerPriceNode = node.ChildNodes.Descendants("div")
                 .Where(node => node.GetAttributeValue("class", "").Equals("ProductComp_offer_price__HAQ6N")).ToList();
+
             if (offerPriceNode.Count() > 0)
             {
                 offerPrice = offerPriceNode.First().ChildNodes[0].ChildNodes[0].InnerText;
             }
 
-            return decimal.Parse(RemoveNoneDigitChars(offerPrice));
+            return string.IsNullOrEmpty(offerPrice) == true ? default : decimal.Parse(RemoveNoneDigitChars(offerPrice));
         }
 
         private float GetDiscount(HtmlNode node)
         {
+            //TODO: Fix bug
             var discount = string.Empty;
             var discountNode = node.ChildNodes.Descendants("div")
                 .Where(node => node.GetAttributeValue("class", "").Equals("ProductComp_product_off_box__OfLBa")).ToList();
@@ -184,7 +180,7 @@ namespace Application.TechnoLifeCrawler.PageParser
                 discount = discountNode.First().ChildNodes[0].ChildNodes[0].InnerText;
             }
 
-            return float.Parse(discount.Substring(0, discount.Length - 1));
+            return string.IsNullOrEmpty(discount) == true ? default : float.Parse(discount.Substring(0, discount.Length - 1));
         }
 
         private string RemoveNoneDigitChars(string input)
