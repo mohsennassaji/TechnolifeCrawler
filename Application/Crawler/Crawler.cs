@@ -96,7 +96,8 @@ namespace Application.Crawler
             var i = 1;
             while (true)
             {
-                var webPage = await _httpClient.GetStringAsync($"{url}?page={i}", cancellationToken);
+                var pageUrl = $"{url}?page={i}";
+                var webPage = await _httpClient.GetStringAsync(pageUrl, cancellationToken);
                 products.AddRange(_technoLifePageParser.GetProducts(webPage));
 
                 var maximumPageNumber = _technoLifePageParser.GetMaximumActivePageNumber(webPage);

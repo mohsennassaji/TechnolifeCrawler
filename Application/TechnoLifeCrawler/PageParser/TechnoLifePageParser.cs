@@ -53,6 +53,18 @@ namespace Application.TechnoLifeCrawler.PageParser
             return products;
         }
 
+        public int GetMaximumActivePageNumber(string page)
+        {
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(page);
+
+            var nodes = htmlDocument.DocumentNode.Descendants("span")
+                .Where(node => node.GetAttributeValue("class", "")
+                .Equals("active-pagenavigation")).Select(n => n.InnerText).ToList();
+
+            return int.Parse(nodes.Max());
+        }
+
         private string GetProductLink(HtmlNode node)
         {
             return $"http://www.technolife.ir{node.ChildNodes[0].Attributes[1].DeEntitizeValue}";
@@ -187,18 +199,6 @@ namespace Application.TechnoLifeCrawler.PageParser
         private string RemoveNoneDigitChars(string input)
         {
             return string.Concat(input.Where(char.IsDigit));
-        }
-
-        public int GetMaximumActivePageNumber(string page)
-        {
-            var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(page);
-
-            var nodes = htmlDocument.DocumentNode.Descendants("span")
-                .Where(node => node.GetAttributeValue("class", "")
-                .Equals("active-pagenavigation")).Select(n => n.InnerText).ToList();
-
-            return int.Parse(nodes.Max());
-        }
+        }        
     }
 }
