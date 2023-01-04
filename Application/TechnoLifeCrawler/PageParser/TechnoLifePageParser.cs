@@ -42,6 +42,7 @@ namespace Application.TechnoLifeCrawler.PageParser
                 product.ImageLink = GetImageLink(node);
                 product.Link = GetProductLink(node);
                 product.Code = node.Id;
+                product.Name = node.ChildNodes[0].Attributes[0].Value;
                 product.LastUpdate = DateTime.Now;
                 product.ProductProvider = ProductProvider.TechnoLife;
                 product.ProductType = ProductType.Laptop;
